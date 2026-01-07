@@ -13,7 +13,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Database Connection
-mongoose.connect('mongodb://localhost:27017/freeSolutions')
+const dbURI = process.env.MONGO_URI || 'mongodb://localhost:27017/freeSolutions';
+
+mongoose.connect(dbURI)
 .then(() => console.log("MongoDB Connected"))
 .catch(err => console.log(err));
 
