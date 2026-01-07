@@ -27,13 +27,24 @@ app.use(session({
     saveUninitialized: false
 }));
 
-const storage = multer.diskStorage({
-    destination: './public/uploads/', // Images will be saved here
-    filename: function(req, file, cb){
-        // Save as: fieldname-date.jpg
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
+// --- CLOUDINARY SETUP ---
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'school-app-uploads', // The folder name in your Cloudinary dashboard
+        allowed_formats: ['jpg', 'png', 'jpeg'],
+    },
+});
+
 
 const upload = multer({
     storage: storage,
@@ -277,7 +288,7 @@ app.post('/admin/add-solution', upload.single('questionImage'), async (req, res)
         const newContent = new Content({
             classLevel, medium, subject, chapterName, exercise,
             questionNumber, questionDescription, videoID, textSolution,
-            questionImage: req.file ? '/uploads/' + req.file.filename : null
+            questionImage: req.file ? req.file.path : null
         });
 
         // 3. SAVE TO DB
