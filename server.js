@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
@@ -24,9 +25,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(session({
-    secret: 'secretKey123', // In production, use ENV variable
+    secret: process.env.SESSION_SECRET || 'secretKey123',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI // This uses your existing cloud DB
+    })
 }));
 
 // --- CLOUDINARY SETUP ---
