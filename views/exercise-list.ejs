@@ -1,0 +1,161 @@
+<%
+    // --- SMART LOGIC ---
+    // Fallback logic to ensure variables exist to prevent crashes
+    let finalTitle = (typeof title !== 'undefined' && title) ? title : 
+                     ((typeof chapter !== 'undefined') ? chapter : 'Exercises');
+                     
+    let finalBack = (typeof backLink !== 'undefined' && backLink) ? backLink : 
+                    '/content/' + ((typeof subject !== 'undefined') ? subject : '');
+%>
+
+<%- include('partials/header', {title: finalTitle, backLink: finalBack}) %>
+
+<style>
+    /* --- 1. THEME VARIABLES --- */
+    :root {
+        --bg-body: #f4f7f6;
+        --card-bg: #ffffff;
+        --text-main: #2c3e50;
+        --text-sub: #7f8c8d;
+        --border-color: #e0e0e0;
+        --shadow: rgba(0,0,0,0.05);
+        --shadow-hover: rgba(0,0,0,0.15);
+        
+        /* Accent Color for Exercises (Orange) */
+        --accent-color: #e67e22; 
+        --accent-hover: #d35400;
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-body: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ecf0f1;
+            --text-sub: #b2bec3;
+            --border-color: #333333;
+            --shadow: rgba(0,0,0,0.3);
+            --shadow-hover: rgba(0,0,0,0.5);
+            
+            --accent-color: #e67e22; /* Keep Orange in Dark Mode */
+        }
+    }
+
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+
+    /* --- 2. RESPONSIVE GRID --- */
+    .exercise-grid {
+        display: grid;
+        /* Mobile: 1 column
+           Tablet/Desktop: Auto-fills columns (min width 280px)
+        */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 15px;
+    }
+
+    /* --- 3. CARD DESIGN --- */
+    .exercise-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        border-left: 5px solid var(--accent-color); /* The Orange Stripe */
+        
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        box-shadow: 0 2px 5px var(--shadow);
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        text-decoration: none; /* Removes link underline */
+    }
+
+    /* Hover Effects */
+    .exercise-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 15px var(--shadow-hover);
+        border-left-color: var(--accent-hover);
+    }
+
+    .exercise-card h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    .exercise-card span {
+        font-size: 0.9rem;
+        color: var(--text-sub);
+    }
+
+    /* Icons */
+    .icon-left {
+        color: var(--accent-color);
+        margin-right: 12px;
+        font-size: 1.2rem;
+    }
+    
+    .icon-right {
+        color: var(--text-sub);
+        font-size: 1rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 40px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        color: var(--text-sub);
+        border: 1px solid var(--border-color);
+    }
+</style>
+
+<div class="container">
+    
+    <div class="exercise-grid">
+
+        <% if(!exercises || exercises.length === 0) { %>
+            <div class="empty-state">
+                <i class="fas fa-folder-open" style="font-size: 40px; margin-bottom: 10px; opacity: 0.5;"></i>
+                <h3>No Exercises Found</h3>
+                <p>There are no exercises listed for this chapter yet.</p>
+            </div>
+        <% } %>
+
+        <% exercises.forEach(ex => { %>
+            <a href="/content/<%= subject %>/<%= chapter %>/<%= ex %>" class="exercise-card">
+                
+                <div style="display: flex; align-items: center;">
+                    <i class="fas fa-book-open icon-left"></i>
+                    <div>
+                        <h3>Exercise <%= ex %></h3>
+                        <span>View Questions</span>
+                    </div>
+                </div>
+
+                <i class="fas fa-chevron-right icon-right"></i>
+            
+            </a>
+        <% }) %>
+
+    </div>
+
+    <div style="height: 50px;"></div>
+</div>
+
+</body>
+</html>

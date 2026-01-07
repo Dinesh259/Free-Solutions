@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Solutions</title>
+
+    <style>
+        /* --- 1. THEME VARIABLES --- */
+        :root {
+            /* Light Mode */
+            --bg-body: #f4f7f6;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            --card-bg: #ffffff;
+            --card-shadow: rgba(0,0,0,0.1);
+            --hover-shadow: rgba(0,0,0,0.15);
+        }
+
+        /* Dark Mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #121212;
+                --text-main: #ecf0f1;
+                --text-sub: #b2bec3;
+                --card-bg: #1e1e1e;
+                --card-shadow: rgba(0,0,0,0.3);
+                --hover-shadow: rgba(0,0,0,0.5);
+            }
+        }
+
+        /* --- 2. LAYOUT --- */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px; /* Limits width on big screens */
+            margin: 0 auto;   /* Centers the container */
+            padding: 20px;
+        }
+
+        /* --- 3. GRID SYSTEM (The Responsive Part) --- */
+        .subject-grid {
+            display: grid;
+            /* Auto-fit: Fits as many cards as possible. 
+               minmax(300px, 1fr): Cards are at least 300px wide, but stretch to fill space. */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; /* Space between cards */
+            margin-top: 20px;
+        }
+
+        /* --- 4. CARD STYLING --- */
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block; /* Makes the whole link clickable */
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 10px var(--card-shadow);
+            
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border-left-width: 6px; /* Thicker accent line */
+            border-left-style: solid;
+        }
+
+        /* Hover Effect: Lift up slightly */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--hover-shadow);
+        }
+
+        /* Typography */
+        .card h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .card p {
+            margin: 0;
+            color: var(--text-sub);
+            font-size: 0.9rem;
+        }
+
+        .icon {
+            font-size: 3rem; /* Bigger icons */
+            line-height: 1;
+        }
+
+        /* --- 5. SPECIFIC CARD COLORS --- */
+        .math-card { border-left-color: #d96e16; }
+        .science-card { border-left-color: #50E3C2; }
+
+    </style>
+</head>
+<body>
+
+    <%- include('partials/header', {title: 'Free Solutions'}) %>
+
+    <div class="container">
+        
+        <div class="subject-grid">
+
+            <a href="/content/Mathematics" class="card-link">
+                <div class="card math-card">
+                    <div>
+                        <h2>Mathematics</h2>
+                        <p>Video & Text Solutions</p>
+                    </div>
+                    <div class="icon">📐</div>
+                </div>
+            </a>
+
+            <a href="/content/Science" class="card-link">
+                <div class="card science-card">
+                    <div>
+                        <h2>Science</h2>
+                        <p>Video & Text Solutions</p>
+                    </div>
+                    <div class="icon">🔬</div>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

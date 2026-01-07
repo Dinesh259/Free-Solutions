@@ -1,0 +1,212 @@
+<%- include('partials/header', {title: title, backLink: backLink}) %>
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* 1. CSS VARIABLES (Kept exactly as yours) */
+    :root {
+        --bg-body: #f4f6f8;
+        --card-bg: #ffffff;
+        --text-color: #2c3e50;
+        --text-muted: #636e72;
+        --border-color: #e0e0e0;
+        --solution-bg: #f8f9fa;
+        --solution-border: #dfe6e9;
+        --highlight: #27ae60;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-body: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #ecf0f1;
+            --text-muted: #b2bec3;
+            --border-color: #333;
+            --solution-bg: #2d3436;
+            --solution-border: #444;
+            --highlight: #2ecc71;
+        }
+    }
+
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-color);
+        font-family: 'Roboto', sans-serif;
+        line-height: 1.6;
+    }
+
+    .container {
+        margin-top: 20px;
+        max-width: 900px; /* Increased slightly for desktop view */
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid var(--border-color);
+        overflow: hidden; 
+    }
+
+    /* --- LAYOUT WRAPPER (New for Mobile/Desktop Orientation) --- */
+    .question-layout {
+        display: flex;
+        flex-direction: column; /* Mobile Default: Stacked */
+        gap: 20px;
+    }
+
+    /* Desktop View: Side by Side */
+    @media (min-width: 768px) {
+        .question-layout {
+            flex-direction: row; 
+            align-items: flex-start;
+        }
+        
+        .question-desc {
+            flex: 1; /* Takes available space */
+            margin-bottom: 0 !important;
+        }
+
+        .image-group {
+            width: 280px; /* Fixed width for image on desktop */
+            flex-shrink: 0;
+        }
+    }
+
+    /* --- IMAGE STYLING --- */
+    .image-container {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        cursor: zoom-in;
+        background: #fff;
+        overflow: hidden;
+    }
+    
+    .image-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .zoom-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 4px;
+    }
+
+    /* --- TEXT CONTENT --- */
+    .question-desc {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--text-color);
+        overflow-wrap: break-word;
+    }
+
+    /* --- VIDEO SECTION --- */
+    .video-wrapper {
+        margin-top: 25px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background: #000;
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* --- SOLUTION BOX --- */
+    .solution-box {
+        background: var(--solution-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--solution-border);
+        font-size: 16px;
+        line-height: 1.8;
+        white-space: pre-wrap; 
+        overflow-wrap: break-word;
+        font-family: 'Times New Roman', serif;
+        color: var(--text-color);
+    }
+
+    h4.solution-title {
+        color: var(--highlight);
+        font-weight: 700;
+        border-left: 4px solid var(--highlight);
+        padding-left: 10px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        
+        <div class="question-layout">
+            
+            <div class="question-desc">
+                <%= (content.questionDescription || '').trim() %>
+            </div>
+
+            <% if (content.questionImage) { %>
+                <div class="image-group">
+                    <div class="image-container" onclick="openModal('<%= content.questionImage %>')">
+                        <img src="<%= content.questionImage %>" alt="Question Image">
+                    </div>
+                    <p class="zoom-hint">🔍 Click to zoom</p>
+                </div>
+            <% } %>
+
+        </div>
+        <% if (content.videoID) { %>
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/<%= content.videoID %>?rel=0" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        <% } %>
+        
+        <hr style="border:0; border-top: 1px solid var(--border-color); margin: 25px 0;">
+        
+        <h4 class="solution-title">Text Solution:</h4>
+        <div class="solution-box"><%= (content.textSolution || '').trim() %></div>
+
+    </div>
+    <div style="height: 50px;"></div>
+</div>
+
+<div id="imgModal" onclick="closeModal()" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); cursor: zoom-out;">
+    <img id="modalImage" style="margin: auto; display: block; width: 90%; max-width: 900px; padding-top: 50px; max-height: 85vh; object-fit: contain;">
+</div>
+
+<script>
+    function openModal(src) {
+        document.getElementById("imgModal").style.display = "block";
+        document.getElementById("modalImage").src = src;
+        document.body.style.overflow = "hidden"; 
+    }
+
+    function closeModal() {
+        document.getElementById("imgModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+</script>

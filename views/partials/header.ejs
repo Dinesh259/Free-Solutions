@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Free Solutions' %></title>
+    
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- THEME VARIABLES (Handles Dark/Light Auto-Switching) --- */
+        :root {
+            --header-bg: #2c3e50;
+            --header-text: #ffffff;
+            --sidenav-bg: #ffffff;
+            --sidenav-text: #2c3e50;
+            --sidenav-hover: #f8f9fa;
+            --sidenav-border: #eeeeee;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Header stays Navy, but Sidenav turns dark */
+                --sidenav-bg: #1e1e1e;
+                --sidenav-text: #ecf0f1;
+                --sidenav-hover: #2d3436;
+                --sidenav-border: #333333;
+            }
+        }
+
+        /* --- HEADER LAYOUT --- */
+        header {
+            background-color: var(--header-bg) !important;
+            color: var(--header-text) !important;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: sticky; /* Stays at top */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left, .header-right {
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .header-title {
+            color: var(--header-text) !important;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncates long titles on mobile */
+            padding: 0 10px;
+        }
+
+        .header-back-btn {
+            color: var(--header-text) !important;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+
+        /* Replaces the text '☰' with a proper icon */
+        .menu-icon {
+            color: var(--header-text) !important;
+            font-size: 1.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-initial {
+            width: 35px;
+            height: 35px;
+            background-color: #e67e22;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.2);
+            font-size: 0.9rem;
+        }
+
+        /* --- SIDENAV (Now uses variables) --- */
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            background-color: var(--sidenav-bg); /* Adaptive BG */
+            overflow-x: hidden;
+            transition: 0.3s;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        }
+
+        .sidenav-header {
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 20px;
+        }
+
+        .sidenav a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            color: var(--sidenav-text); /* Adaptive Text */
+            display: block;
+            transition: 0.2s;
+            border-bottom: 1px solid var(--sidenav-border);
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Space between icon and text */
+        }
+
+        .sidenav a:hover {
+            background-color: var(--sidenav-hover);
+        }
+
+        .sidenav a i {
+            width: 20px;
+            text-align: center;
+            color: #7f8c8d; /* Default Icon Color */
+        }
+
+        /* Specific Icon Colors */
+        .logout-link { color: #e74c3c !important; }
+        .logout-link i { color: #e74c3c !important; }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 36px;
+            color: white;
+            text-decoration: none;
+            border: none;
+        }
+
+        #overlay {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1500;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <% if (typeof backLink !== 'undefined' && backLink) { %>
+                <a href="<%= backLink %>" class="header-back-btn">
+                    <i class="fas fa-arrow-left"></i> 
+                </a>
+            <% } %>
+        </div>
+
+        <div class="header-title">
+            <%= typeof title !== 'undefined' ? title : 'Free Solutions' %>
+        </div>
+
+        <div class="header-right">
+            <% if(typeof user !== 'undefined') { %>
+                <div class="user-initial" onclick="toggleMenu()">
+                    <%= user.name.charAt(0).toUpperCase() %>
+                </div>
+            <% } else { %>
+                <div class="menu-icon" onclick="toggleMenu()">
+                    <i class="fas fa-bars"></i>
+                </div>
+            <% } %>
+        </div>
+    </header>
+
+    <div id="overlay" onclick="closeNav()"></div>
+
+    <div id="side-nav" class="sidenav">
+        <div class="sidenav-header">
+            
+            <% if(typeof user !== 'undefined') { %>
+                <h3 style="margin: 0 0 5px 0;"><%= user.name %></h3>
+                
+                <% if(user.role !== 'admin' && user.studentClass) { %>
+                    <p style="margin: 0; font-size: 13px; color: #bdc3c7;font-weight: bold;">
+                        Class <%= user.studentClass %> • <%= user.medium%> Medium
+                    </p>
+                <% } %>
+
+                <% if(user.role === 'admin') { %>
+                    <p style="margin: 0; font-size: 13px; color: #bdc3c7; font-weight: bold;">
+                        Administrator
+                    </p>
+                <% } %>
+            <% } else { %>
+                <h3>Welcome</h3>
+                <p style="margin:0; font-size: 13px; color: #bdc3c7;">Please Log In</p>
+            <% } %>
+        </div>
+
+        <% if (typeof user !== 'undefined' && user.role === 'admin') { %>
+            <a href="/admin/dashboard"><i class="fas fa-plus-circle"></i> Upload Solution</a>
+            <a href="/admin/database"><i class="fas fa-database"></i> Database</a>
+            <a href="/profile"><i class="fas fa-user"></i> My Profile</a>
+            <a href="/change-password"><i class="fas fa-key"></i> Change Password</a>
+            <a href="/logout" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <% } else { %>
+            <a href="/student/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/profile"><i class="fas fa-user"></i> My Profile</a>
+            <a href="/change-password"><i class="fas fa-key"></i> Change Password</a>
+            <a href="/contact"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="/logout" class="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <% } %>
+    </div>
+
+    <script>
+        function openNav() {
+            document.getElementById("side-nav").style.width = "260px";
+            document.getElementById("overlay").style.display = "block";
+            document.body.style.overflow = "hidden"; 
+        }
+
+        function closeNav() {
+            document.getElementById("side-nav").style.width = "0";
+            document.getElementById("overlay").style.display = "none";
+            document.body.style.overflow = "auto"; 
+        }
+
+        function toggleMenu() {
+            var nav = document.getElementById("side-nav");
+            if (nav.style.width === "260px") {
+                closeNav();
+            } else {
+                openNav();
+            }
+        }
+    </script>
+    <br>

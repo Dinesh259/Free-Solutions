@@ -1,0 +1,167 @@
+<% 
+    // --- SMART TITLE LOGIC ---
+    let finalTitle = '';
+    let finalBack = '';
+
+    if (typeof title !== 'undefined' && title) {
+        finalTitle = title;
+        finalBack = backLink;
+    } else {
+        if (typeof exercise !== 'undefined' && exercise) {
+            finalTitle = 'Exercise ' + exercise;
+            finalBack = '/content/' + subject + '/' + chapter;
+        } else {
+            finalTitle = chapter;
+            finalBack = '/content/' + subject;
+        }
+    }
+%>
+
+<%- include('partials/header', {title: finalTitle, backLink: finalBack}) %>
+
+<script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] } };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+    /* --- 1. COLOR VARIABLES --- */
+    :root {
+        --list-card-bg: #ffffff;
+        --list-text-main: #2c3e50;
+        --list-text-muted: #7f8c8d;
+        --list-border: #e0e0e0;         
+        --list-shadow: rgba(0,0,0,0.05);
+        --list-arrow: #bdc3c7;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --list-card-bg: #1e1e1e;
+            --list-text-main: #ecf0f1;
+            --list-text-muted: #b2bec3;
+            --list-border: #333333;
+            --list-shadow: rgba(0,0,0,0.2);
+            --list-arrow: #7f8c8d;
+        }
+    }
+
+    /* --- 2. CONTAINER (Updated for Desktop Centering) --- */
+    .container {
+        max-width: 900px; /* Prevents cards from getting too wide on desktop */
+        margin: 20px auto; /* Centers the container */
+        padding: 0 15px;
+    }
+
+    /* --- 3. CARD STYLING --- */
+    .question-card {
+        background: var(--list-card-bg);
+        border: 1px solid var(--list-border);
+        border-left: 4px solid #3498db;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start; 
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px var(--list-shadow);
+        transition: transform 0.2s;
+        
+        /* Limit card height to prevent massive boxes */
+        max-height: 100px; 
+        overflow: hidden;
+    }
+    
+    .question-card:active {
+        transform: scale(0.98);
+    }
+
+    .question-card:hover {
+        transform: translateY(-2px); /* Subtle hover effect for Desktop */
+    }
+
+    /* --- 4. TRUNCATED TEXT STYLING --- */
+    .text-container {
+        flex: 1;
+        min-width: 0; /* Crucial for responsiveness */
+        padding-right: 10px;
+        color: var(--list-text-main);
+        font-size: 15px;
+        line-height: 1.5;
+        overflow-wrap: break-word;
+        
+        /* TRIMS TEXT TO 2 LINES */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .q-badge {
+        background: #3498db;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+        margin-top: 0;
+        font-size: 14px;
+    }
+
+    .arrow-icon {
+        color: var(--list-arrow);
+        font-size: 20px; 
+        align-self: center;
+        flex-shrink: 0;
+    }
+
+    .empty-card {
+        text-align: center;
+        color: var(--list-text-muted); 
+        padding: 30px; 
+        background: var(--list-card-bg); 
+        border-radius: 12px;
+        border: 1px solid var(--list-border);
+    }
+</style>
+
+<div class="container">
+    <% if(!questions || questions.length === 0) { %>
+        <div class="empty-card">
+            <h3>📭 Empty</h3>
+            <p>No questions found for this section.</p>
+        </div>
+    <% } %>
+
+    <% questions.forEach(q => { %>
+        <a href="/solution/<%= q._id %>" style="text-decoration:none; color:inherit;">
+            
+            <div class="question-card">
+                
+                <div class="q-badge">
+                    Q<%= q.questionNumber %>
+                </div>
+
+                <div class="text-container">
+                    <%= q.questionDescription %>
+                </div>
+
+                <div class="arrow-icon">
+                    &rsaquo;
+                </div>
+
+            </div>
+        
+        </a>
+    <% }) %>
+    
+    <div style="height: 50px;"></div>
+</div>
+</body>
+</html>

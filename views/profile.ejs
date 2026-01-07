@@ -1,0 +1,157 @@
+<% 
+    // Determine where the Back Arrow should point
+    let backUrl = (user.role === 'admin') ? '/admin/dashboard' : '/student/dashboard';
+%>
+
+<%- include('partials/header', {title: 'Profile', backLink: backUrl}) %>
+
+<style>
+    /* --- Light Mode Variables --- */
+    :root {
+        --profile-card-bg: #ffffff;
+        --profile-item-bg: #f8f9fa;
+        --profile-text: #2c3e50;
+        --profile-muted: #7f8c8d;
+        --profile-border: #eeeeee;
+    }
+
+    /* --- Dark Mode Variables --- */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --profile-card-bg: #1e1e1e;
+            --profile-item-bg: #2d3436;
+            --profile-text: #ecf0f1;
+            --profile-muted: #bdc3c7;
+            --profile-border: #333333;
+        }
+    }
+
+    .profile-container {
+        margin-top: 40px; 
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px;
+    }
+
+    .profile-card {
+        background: var(--profile-card-bg);
+        padding: 40px 30px; /* Slightly reduced side padding for mobile */
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        border: 1px solid var(--profile-border);
+    }
+
+    /* --- RESPONSIVE GRID --- */
+    .info-grid {
+        display: grid; 
+        /* MOBILE DEFAULT: 1 Column */
+        grid-template-columns: 1fr; 
+        gap: 15px; 
+        text-align: left;
+    }
+
+    /* DESKTOP/TABLET: Switch to 2 Columns */
+    @media (min-width: 550px) {
+        .info-grid {
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px;
+        }
+        
+        /* Make the School Name span full width ONLY on desktop */
+        .full-width-desktop {
+            grid-column: span 2;
+        }
+    }
+
+    .info-item {
+        background: var(--profile-item-bg); 
+        padding: 15px; 
+        border-radius: 8px;
+        border: 1px solid var(--profile-border);
+    }
+
+    .info-label {
+        color: var(--profile-muted); 
+        font-size: 11px; 
+        font-weight: bold; 
+        text-transform: uppercase; 
+        letter-spacing: 0.5px;
+        display: block; 
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 15px; 
+        color: var(--profile-text); 
+        font-weight: 500;
+        word-break: break-word; /* Prevents long emails/names from breaking layout */
+    }
+
+    /* Profile Circle */
+    .profile-avatar {
+        width: 100px; 
+        height: 100px; 
+        background: #3498db; 
+        color: white; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 40px; 
+        margin: 0 auto 20px auto; 
+        font-weight: bold; 
+        border: 4px solid var(--profile-border);
+    }
+</style>
+
+<div class="profile-container">
+    <div class="profile-card">
+        
+        <div class="profile-avatar">
+            <%= user.name.charAt(0).toUpperCase() %>
+        </div>
+
+        <h2 style="margin: 0; color: var(--profile-text); font-weight: 700; font-size: 1.5rem;"><%= user.name %></h2>
+        <p style="color: var(--profile-muted); font-size: 15px; margin-top: 5px;">
+            <%= user.role === 'admin' ? 'Administrator' : 'Student' %>
+        </p>
+
+        <hr style="margin: 25px 0; border: 0; border-top: 1px solid var(--profile-border);">
+
+        <div class="info-grid">
+            
+            <div class="info-item">
+                <label class="info-label">Mobile Number</label>
+                <div class="info-value"><%= user.mobile %></div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-label">Father's Name</label>
+                <div class="info-value"><%= user.fatherName || 'Not Added' %></div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-label">Class</label>
+                <div class="info-value">Class <%= user.studentClass %></div>
+            </div>
+
+            <div class="info-item">
+                <label class="info-label">Medium</label>
+                <div class="info-value"><%= user.medium %></div>
+            </div>
+
+            <div class="info-item full-width-desktop">
+                <label class="info-label">School Name</label>
+                <div class="info-value"><%= user.schoolName || 'Not Added' %></div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div style="height: 50px;"></div> 
+</div>
+
+</body>
+</html>

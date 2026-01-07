@@ -1,0 +1,164 @@
+<%
+    // --- SMART LOGIC ---
+    // Ensure variables exist to prevent crashes
+    let finalTitle = (typeof title !== 'undefined' && title) ? title : 
+                     ((typeof subject !== 'undefined') ? subject : 'Chapters');
+                     
+    let finalBack = (typeof backLink !== 'undefined' && backLink) ? backLink : '/student/dashboard';
+%>
+
+<%- include('partials/header', {title: finalTitle, backLink: finalBack}) %>
+
+<style>
+    /* --- 1. THEME VARIABLES --- */
+    :root {
+        --bg-body: #f4f7f6;
+        --card-bg: #ffffff;
+        --text-main: #2c3e50;
+        --text-sub: #7f8c8d;
+        --border-color: #e0e0e0;
+        --shadow: rgba(0,0,0,0.05);
+        --shadow-hover: rgba(0,0,0,0.15);
+        
+        /* Accent Color for Chapters (Green) */
+        --accent-color: #27ae60; 
+        --accent-hover: #219150;
+    }
+
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-body: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ecf0f1;
+            --text-sub: #b2bec3;
+            --border-color: #333333;
+            --shadow: rgba(0,0,0,0.3);
+            --shadow-hover: rgba(0,0,0,0.5);
+            
+            --accent-color: #27ae60;
+        }
+    }
+
+    body {
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 0 15px;
+    }
+
+    /* --- 2. RESPONSIVE GRID --- */
+    .chapter-grid {
+        display: grid;
+        /* Mobile: 1 column
+           Desktop: Auto-fills columns (min width 300px)
+        */
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+    }
+
+    /* --- 3. CARD DESIGN --- */
+    .chapter-card {
+        background: var(--card-bg);
+        border-radius: 8px;
+        padding: 20px;
+        border: 1px solid var(--border-color);
+        border-left: 5px solid var(--accent-color); /* Green Stripe */
+        
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        
+        box-shadow: 0 2px 5px var(--shadow);
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none; /* Removes underline from link */
+        min-height: 60px; /* Ensures consistent height */
+    }
+
+    /* Hover Effects */
+    .chapter-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 15px var(--shadow-hover);
+        border-left-color: var(--accent-hover);
+    }
+
+    .chapter-info h3 {
+        margin: 0;
+        font-size: 1.15rem;
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    .chapter-info span {
+        font-size: 0.85rem;
+        color: var(--text-sub);
+        margin-top: 4px;
+        display: block;
+    }
+
+    /* Icons */
+    .icon-left {
+        color: var(--accent-color);
+        font-size: 1.5rem;
+        margin-right: 15px;
+    }
+    
+    .icon-right {
+        color: var(--text-sub);
+        font-size: 1rem;
+        opacity: 0.7;
+    }
+
+    /* Empty State */
+    .empty-state {
+        grid-column: 1 / -1; /* Spans full width */
+        text-align: center;
+        padding: 50px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        color: var(--text-sub);
+        border: 1px solid var(--border-color);
+    }
+</style>
+
+<div class="container">
+    
+    <div class="chapter-grid">
+
+        <% if(!chapters || chapters.length === 0) { %>
+            <div class="empty-state">
+                <i class="fas fa-layer-group" style="font-size: 40px; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h3>No Chapters Found</h3>
+                <p>Content for your class is being updated.</p>
+            </div>
+        <% } %>
+
+        <% chapters.forEach(chap => { %>
+            <a href="/content/<%= subject %>/<%= chap %>" class="chapter-card">
+                
+                <div style="display: flex; align-items: center;">
+                    <i class="fas fa-bookmark icon-left"></i>
+                    
+                    <div class="chapter-info">
+                        <h3><%= chap %></h3>
+                        <span>Tap to view exercises</span>
+                    </div>
+                </div>
+
+                <i class="fas fa-chevron-right icon-right"></i>
+            
+            </a>
+        <% }) %>
+
+    </div>
+
+    <div style="height: 50px;"></div>
+</div>
+
+</body>
+</html>

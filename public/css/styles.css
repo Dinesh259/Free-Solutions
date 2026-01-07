@@ -1,0 +1,392 @@
+/* --- Global Reset & Fonts --- */
+:root {
+    /* 1. CORE COLORS (The Brand) */
+    --primary: #4A90E2;    /* Professional Blue */
+    --secondary: #50E3C2;  /* Clean Teal */
+    
+    /* 2. FUNCTIONAL COLORS (Light Mode Defaults) */
+    --bg-body: #FFFFFF;    /* Soft Grey Background */
+    --bg-card: #FFFFFF;    /* White Cards */
+    --bg-sidebar: #FFFFFF;
+    --text-main: #2C3E50;  /* Dark Navy Text */
+    --text-muted: #7F8C8D; /* Grey Description Text */
+    --border-color: #BDC3C7;
+    --shadow-color: rgba(0,0,0,0.05);
+    
+    --radius: 8px;
+    --shadow: 0 4px 6px var(--shadow-color);
+}
+
+/* --- THE MAGIC: DARK MODE OVERRIDES --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Swap colors for Dark Mode */
+        --bg-body: #000000;    /* Very Dark Grey */
+        --bg-card: #1E1E1E;    /* Dark Card Surface */
+        --bg-sidebar: #1E1E1E;
+        --text-main: #ECF0F1;  /* Light Text */
+        --text-muted: #B0B3B8; /* Lighter Muted Text */
+        --border-color: #333333;
+        --shadow-color: rgba(0,0,0,0.5);
+    }
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-body); /* Changed to Variable */
+    color: var(--text-main);          /* Changed to Variable */
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+}
+
+/* --- Header Styling --- */
+header {
+    background: var(--bg-card);      /* Changed to Variable */
+    color: var(--text-main);         /* Changed to Variable */
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+header div:first-child {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+header .nav-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 16px;
+    border: 1px solid var(--primary);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+header .nav-link:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* --- Layout --- */
+.container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h2, h3 {
+    margin-top: 0;
+    font-weight: 600;
+    color: var(--text-main); /* Ensure headers adapt */
+}
+
+p {
+    margin-bottom: 0;
+    color: var(--text-muted); /* Changed to Variable */
+}
+
+/* --- Cards --- */
+.card {
+    background: var(--bg-card); /* Changed to Variable */
+    padding: 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color); /* Changed to Variable */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px var(--shadow-color);
+}
+
+/* --- Links & Buttons --- */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background-color: var(--bg-body); /* Dark input in dark mode */
+    color: var(--text-main);          /* Light text in dark mode */
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* Fix for Select dropdown arrow in Chrome/Edge */
+select {
+    color: var(--text-main);
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: #357ABD;
+}
+
+/* --- Video Wrapper --- */
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: #000;
+    margin-top: 15px;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Sidebar Styling --- */
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 200;
+    top: 0;
+    left: 0;
+    background-color: var(--bg-sidebar); /* Changed to Variable */
+    overflow-x: hidden;
+    transition: 0.3s;
+    box-shadow: 2px 0 5px var(--shadow-color);
+}
+
+.sidenav a {
+    padding: 15px 25px;
+    text-decoration: none;
+    font-size: 18px;
+    color: var(--text-main); /* Changed to Variable */
+    display: block;
+    transition: 0.3s;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidenav a:hover {
+    background-color: var(--bg-body);
+    color: var(--primary);
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    border-bottom: none;
+}
+
+.sidenav-header {
+    padding: 0 25px;
+    margin-bottom: 10px;
+}
+.sidenav-header h3 { margin: 0; color: var(--primary); }
+.sidenav-header p { margin: 0; color: var(--text-muted); font-size: 14px; }
+
+/* Overlay */
+#overlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 150;
+    cursor: pointer;
+}
+
+/* User Initial Circle */
+.user-initial {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    font-size: 1.2rem;
+    user-select: none;
+}
+
+.user-initial:active {
+    transform: scale(0.95);
+}
+
+.header-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text-main); /* Changed to Variable */
+}
+.menu-icon {
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.header-back-btn {
+    font-size: 1.5rem;
+    color: var(--primary);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+
+.header-back-btn:hover {
+    background: var(--bg-body); /* Subtle circle on hover */
+}
+
+/* Solution Box Styling */
+.solution-box {
+    background: var(--bg-body);      
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    line-height: 1.6;
+    color: var(--text-main);
+}
+
+/* --- DATABASE TABLE FIX --- */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Removes gaps between cells */
+    background-color: var(--bg-card) !important; /* Forces Dark BG in Dark Mode */
+    color: var(--text-main) !important;          /* Forces Visible Text */
+}
+
+/* Style the Table Headers (Class, Medium, etc.) */
+th {
+    background-color: var(--bg-body) !important; /* Slightly different shade */
+    color: var(--text-main) !important;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+/* Style the Table Data (The rows that are hard to read) */
+td {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card) !important; /* Ensure row is dark */
+    color: var(--text-main) !important;          /* Ensure text is bright */
+}
+
+/* Optional: Add a subtle stripe for readability */
+tr:nth-child(even) td {
+    background-color: rgba(127, 140, 141, 0.1) !important; /* Very subtle stripe */
+}
+
+/* --- USER ICON ANIMATION --- */
+
+/* 1. Make the movement smooth */
+.user-initial {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect */
+}
+
+/* 2. What happens when you hover */
+.user-initial:hover {
+    transform: scale(1.15) rotate(5deg);  /* Pop up and tilt slightly */
+    box-shadow: 0 0 15px var(--primary);  /* Add a "Glow" using your theme color */
+    filter: brightness(1.1);              /* Make it slightly brighter */
+    cursor: pointer;
+}
+
+/* --- HOVER DROPDOWN MENU --- */
+
+/* 1. The Container (Holds the icon and the hidden menu) */
+.profile-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* 2. The Menu Box (Hidden by default) */
+.dropdown-menu {
+    display: none; /* Hide it */
+    position: absolute;
+    top: 55px;     /* Push it down below the header */
+    left: 0;       /* Align with the left side */
+    width: 240px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 1000;
+    overflow: hidden; /* Keeps corners rounded */
+}
+
+/* 3. SHOW the menu when Hovering */
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+    animation: slideDown 0.2s ease-out; /* Smooth entrance */
+}
+
+/* 4. Menu Items */
+.dropdown-header-info {
+    background: var(--bg-body);
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+.dropdown-menu a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 14px;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border-color);
+}
+.dropdown-menu a:hover {
+    background-color: var(--bg-body);
+    padding-left: 25px; /* Slide effect on hover */
+}
+.dropdown-menu a:last-child {
+    border-bottom: none; /* Remove border from last item */
+}
+
+/* Animation */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

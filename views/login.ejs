@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Free Solutions</title>
+
+    <style>
+        /* --- 1. COLOR THEME VARIABLES --- */
+        :root {
+            /* Light Mode (Default) */
+            --bg-body: #f4f6f8;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #636e72;
+            --border-color: #e0e0e0;
+            --input-bg: #ffffff;
+            --input-border: #cccccc;
+            --input-text: #333333;
+            --btn-bg: #3498db;
+            --btn-hover: #2980b9;
+            --err-bg: #ffebee;
+            --err-text: #c62828;
+            --err-border: #ffcdd2;
+        }
+
+        /* Dark Mode Override */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #121212;
+                --bg-card: #1e1e1e;
+                --text-main: #ecf0f1;
+                --text-muted: #b2bec3;
+                --border-color: #333333;
+                --input-bg: #2d3436;
+                --input-border: #444444;
+                --input-text: #ffffff;
+                --btn-bg: #3498db;
+                --btn-hover: #5dade2;
+                --err-bg: #3b1818;
+                --err-text: #ff8a80;
+                --err-border: #5c2525;
+            }
+        }
+
+        /* --- 2. GLOBAL LAYOUT --- */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            padding: 20px;
+            margin-top: 50px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- 3. CARD STYLING --- */
+        .card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            width: 100%;           
+            max-width: 400px;      
+            box-sizing: border-box; 
+        }
+
+        h2 {
+            color: var(--text-main);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* --- 4. INPUT FIELDS --- */
+        input[type="text"], 
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0 16px 0;
+            display: inline-block;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            box-sizing: border-box; 
+            font-size: 16px; 
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--btn-bg);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        /* --- 5. BUTTONS & LINKS --- */
+        .btn {
+            background-color: var(--btn-bg);
+            color: white;
+            padding: 12px 0;
+            margin: 10px 0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        a { transition: color 0.2s; }
+        
+        .link-secondary {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .link-primary {
+            color: var(--btn-bg);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+        }
+        a:hover { color: var(--btn-hover) !important; }
+
+        /* Error Message Style */
+        #error-msg {
+            background-color: var(--err-bg);
+            color: var(--err-text);
+            border: 1px solid var(--err-border);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Free Solutions</h2>
+        
+        <div class="card">
+            
+            <% if(error) { %> 
+                <div id="error-msg">
+                    <%= error %>
+                </div> 
+            <% } %>
+            
+            <form action="/login" method="POST">
+                <input type="text" name="mobile" placeholder="Mobile Number" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="/forgot-password" class="link-secondary">
+                    Forgot Password?
+                </a>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+
+            <div style="text-align: center;">
+                <span class="link-secondary">Don't have an account?</span><br>
+                <a href="/register-test" class="link-primary" style="display: inline-block; margin-top: 5px;">
+                    Create New Account
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const errorElement = document.getElementById('error-msg');
+        
+        if (errorElement) {
+            // 1. CLEAN THE URL: Remove ?error=... from the address bar immediately
+            if (window.history.replaceState) {
+                // This replaces the current URL with just the path (e.g. /login)
+                // without reloading the page.
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
+            // 2. HIDE THE MESSAGE: Wait 3 seconds, then fade out
+            setTimeout(() => {
+                errorElement.style.opacity = '0';
+                setTimeout(() => {
+                    errorElement.style.display = 'none';
+                }, 500);
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>
