@@ -28,7 +28,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'secretKey123',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
+    store: new MongoStore({
         mongoUrl: process.env.MONGO_URI // This uses your existing cloud DB
     })
 }));
