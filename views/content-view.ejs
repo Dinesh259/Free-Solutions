@@ -114,14 +114,15 @@ window.MathJax = {
 
     /* --- VIDEO SECTION --- */
     .video-wrapper {
-        margin-top: 25px;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        background: #000;
         position: relative;
-        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        /* This magic number (56.25%) creates a perfect 16:9 YouTube rectangle */
+        padding-bottom: 56.25%; 
         height: 0;
+        overflow: hidden;
+        background: #000;
+        margin-top: 25px;
+        border-radius: 8px; /* Rounded corners for Desktop */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .video-wrapper iframe {
@@ -130,6 +131,19 @@ window.MathJax = {
         left: 0;
         width: 100%;
         height: 100%;
+        border: 0;
+    }
+
+    /* --- MOBILE "REAL YOUTUBE" MODE --- */
+    /* This makes the video touch the screen edges on phones */
+    @media (max-width: 768px) {
+        .video-wrapper {
+            margin-left: -15px;       /* Pull left to edge */
+            margin-right: -15px;      /* Pull right to edge */
+            width: calc(100% + 30px); /* Fill the gap */
+            border-radius: 0;         /* Sharp corners like real app */
+            margin-top: 15px;
+        }
     }
 
     /* --- SOLUTION BOX --- */
