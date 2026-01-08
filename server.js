@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const compression = require('compression');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo').default;
 const session = require('express-session');
@@ -9,7 +10,7 @@ const User = require('./models/User');
 const Content = require('./models/Content');
 const multer = require('multer');
 const path = require('path');
-
+app.use(compression());
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -24,15 +25,23 @@ mongoose.connect(dbURI)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
+app.set('trust proxy', 1);
+
 app.use(session({
+    name: 'freesolutions.sid',
     secret: process.env.SESSION_SECRET || 'mySuperSecretKey123',
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI,
-        ttl: 14 * 24 * 60 * 60
-    })
+        ttl: 14 * 24 * 60 * 60 // 14 days
+    }),
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax'
+    }
 }));
+
 
 // --- CLOUDINARY SETUP ---
 const cloudinary = require('cloudinary').v2;
