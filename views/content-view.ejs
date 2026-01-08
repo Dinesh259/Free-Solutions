@@ -8,7 +8,7 @@ window.MathJax = {
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
 <style>
-    /* 1. CSS VARIABLES (Kept exactly as yours) */
+    /* 1. CSS VARIABLES */
     :root {
         --bg-body: #f4f6f8;
         --card-bg: #ffffff;
@@ -40,9 +40,10 @@ window.MathJax = {
         line-height: 1.6;
     }
 
+    /* 2. MAIN CONTAINER */
     .container {
         margin-top: 20px;
-        max-width: 900px; /* Increased slightly for desktop view */
+        max-width: 900px;
         margin-left: auto;
         margin-right: auto;
         padding: 0 15px;
@@ -51,38 +52,35 @@ window.MathJax = {
     .card {
         background: var(--card-bg);
         border-radius: 12px;
-        padding: 25px;
+        padding: 25px; /* <--- NOTE: This is 25px */
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         border: 1px solid var(--border-color);
         overflow: hidden; 
     }
 
-    /* --- LAYOUT WRAPPER (New for Mobile/Desktop Orientation) --- */
+    /* 3. QUESTION LAYOUT */
     .question-layout {
         display: flex;
-        flex-direction: column; /* Mobile Default: Stacked */
+        flex-direction: column;
         gap: 20px;
     }
 
-    /* Desktop View: Side by Side */
     @media (min-width: 768px) {
         .question-layout {
             flex-direction: row; 
             align-items: flex-start;
         }
-        
         .question-desc {
-            flex: 1; /* Takes available space */
+            flex: 1;
             margin-bottom: 0 !important;
         }
-
         .image-group {
-            width: 280px; /* Fixed width for image on desktop */
+            width: 280px;
             flex-shrink: 0;
         }
     }
 
-    /* --- IMAGE STYLING --- */
+    /* 4. IMAGE STYLING */
     .image-container {
         border: 1px solid var(--border-color);
         border-radius: 8px;
@@ -104,7 +102,6 @@ window.MathJax = {
         margin-top: 4px;
     }
 
-    /* --- TEXT CONTENT --- */
     .question-desc {
         font-size: 16px;
         font-weight: 500;
@@ -112,17 +109,17 @@ window.MathJax = {
         overflow-wrap: break-word;
     }
 
-    /* --- VIDEO SECTION --- */
+    /* 5. VIDEO SECTION (FIXED) */
     .video-wrapper {
         position: relative;
-        /* This magic number (56.25%) creates a perfect 16:9 YouTube rectangle */
-        padding-bottom: 56.25%; 
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
         height: 0;
         overflow: hidden;
         background: #000;
         margin-top: 25px;
-        border-radius: 8px; /* Rounded corners for Desktop */
+        border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        z-index: 1;
     }
 
     .video-wrapper iframe {
@@ -134,19 +131,22 @@ window.MathJax = {
         border: 0;
     }
 
-    /* --- MOBILE "REAL YOUTUBE" MODE --- */
-    /* This makes the video touch the screen edges on phones */
+    /* --- MOBILE EDGE-TO-EDGE FIX --- */
     @media (max-width: 768px) {
         .video-wrapper {
-            margin-left: -15px;       /* Pull left to edge */
-            margin-right: -15px;      /* Pull right to edge */
-            width: calc(100% + 30px); /* Fill the gap */
-            border-radius: 0;         /* Sharp corners like real app */
-            margin-top: 15px;
+            /* Since .card padding is 25px, we must pull -25px to touch edges */
+            margin-left: -25px;       
+            margin-right: -25px;      
+            width: calc(100% + 50px); /* 100% + Left(25) + Right(25) */
+            
+            border-radius: 0; 
+            margin-top: 20px;
+            border-bottom: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
         }
     }
 
-    /* --- SOLUTION BOX --- */
+    /* 6. SOLUTION BOX */
     .solution-box {
         background: var(--solution-bg);
         padding: 20px;
@@ -154,11 +154,13 @@ window.MathJax = {
         border: 1px solid var(--solution-border);
         font-size: 16px;
         line-height: 1.8;
+        
         width: 100%;              
         max-width: 100%;          
-        overflow-x: auto;         
+        overflow-x: auto;   /* Horizontal scroll for long math */
         display: block;           
         white-space: pre-wrap;
+        
         font-family: 'Times New Roman', serif;
         color: var(--text-color);
     }
@@ -176,7 +178,6 @@ window.MathJax = {
     <div class="card">
         
         <div class="question-layout">
-            
             <div class="question-desc">
                 <%= (content.questionDescription || '').trim() %>
             </div>
@@ -189,15 +190,17 @@ window.MathJax = {
                     <p class="zoom-hint">🔍 Click to zoom</p>
                 </div>
             <% } %>
-
         </div>
+
         <% if (content.videoID) { %>
             <div class="video-wrapper">
                 <iframe 
-                    src="https://www.youtube.com/embed/<%= content.videoID %>?rel=0" 
+                    src="https://www.youtube.com/embed/<%= content.videoID %>?rel=0&fs=1" 
                     frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen
+                    webkitallowfullscreen
+                    mozallowfullscreen>
                 </iframe>
             </div>
         <% } %>
