@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongo').default;
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
@@ -25,11 +25,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'secretKey123',
+    secret: process.env.SESSION_SECRET || 'mySuperSecretKey123',
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({
-        mongoUrl: process.env.MONGO_URI // This uses your existing cloud DB
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI,
+        ttl: 14 * 24 * 60 * 60
     })
 }));
 
