@@ -10,8 +10,9 @@ const User = require('./models/User');
 const Content = require('./models/Content');
 const multer = require('multer');
 const path = require('path');
-app.use(compression());
+
 const app = express();
+app.use(compression());
 const PORT = process.env.PORT || 3000;
 
 // Database Connection
