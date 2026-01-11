@@ -85,6 +85,10 @@ app.use((req, res, next) => {
     next();
 });
 
+app.get('/keep-alive', (req, res) => {
+  res.send('Server is awake!');
+});
+
 // --- Routes ---
 // Temporary Registration Route for testing
 app.get('/register-test', (req, res) => {
